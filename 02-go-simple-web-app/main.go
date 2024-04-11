@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -27,9 +28,28 @@ func addValue(num1, num2 int) int {
 	return sum
 }
 
+func Divide(w http.ResponseWriter, r *http.Request) {
+	res, err := divideValues(100.0, 0.0)
+	if err != nil {
+		fmt.Fprintf(w, "Cannot divide by 0!")
+		return
+	}
+	fmt.Fprintf(w, fmt.Sprintf(" %d / %d = %d", 100.0, 10.0, res))
+}
+
+func divideValues(x, y float32) (float32, error) {
+	if y <= 0 {
+		e := errors.New("Divide by 0 exception")
+		return 0, e
+	}
+	res := x / y
+	return res, nil
+}
+
 func main() {
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/about", About)
+	http.HandleFunc("/divide", Divide)
 
 	fmt.Printf("Server starting on port %s", portNumber)
 	_ = http.ListenAndServe(":8080", nil)
