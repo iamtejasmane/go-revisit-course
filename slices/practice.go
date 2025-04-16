@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+type Product struct {
+	title string
+	id    int
+	price float64
+}
+
 func main() {
 	// 1) Create a new array (!) that contains three hobbies you have
 	// 		Output (print) that array in the command line.
@@ -33,10 +39,30 @@ func main() {
 	goals = append(goals, "make_tools")
 	fmt.Println(goals)
 
+	// 7) Bonus: Create a "Product" struct with title, id, price and create a
+	//		dynamic list of products (at least 2 products).
+	//		Then add a third product to the existing list of products.
+
+	p1 := Product{
+		title: "Mobile",
+		id:    1,
+		price: 299,
+	}
+
+	p2 := Product{
+		title: "Watch",
+		id:    2,
+		price: 59,
+	}
+
+	products := []Product{p1, p2}
+	fmt.Println(products)
+
+	products = append(products, Product{
+		title: "Laptop",
+		id:    3,
+		price: 599,
+	})
+
+	fmt.Println(products)
 }
-
-// Time to practice what you learned!
-
-// 7) Bonus: Create a "Product" struct with title, id, price and create a
-//		dynamic list of products (at least 2 products).
-//		Then add a third product to the existing list of products.
