@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"example.com/price-calculator/conversion"
 )
 
 type TaxIncludedPriceJob struct {
@@ -12,7 +14,7 @@ type TaxIncludedPriceJob struct {
 	TaxIncludedPrices map[string]float64
 }
 
-func (job TaxIncludedPriceJob) LoadData() {
+func (job *TaxIncludedPriceJob) LoadData() {
 	file, err := os.Open("prices.txt")
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -32,12 +34,26 @@ func (job TaxIncludedPriceJob) LoadData() {
 		file.Close()
 		return
 	}
+
+	prices, err := conversion.StringsToFloat(lines)
+
+	if err != nil {
+		file.Close()
+		fmt.Println("Converting file failed :", err)
+		return
+
+	}
+	job.InputPrices = prices
+	file.Close()
 }
 
-func (job TaxIncludedPriceJob) Process() {
-	result := make(map[string]float64)
+func (job *TaxIncludedPriceJob) Process() {
+	job.LoadData()
+
+	result := make(map[string]string)
 	for _, price := range job.InputPrices {
-		result[fmt.Sprintf("%.2f", price)] = price * (1 + job.TaxRate)
+		taxIncludedPrice := price * (1 + job.TaxRate)
+		result[fmt.Sprintf("%.2f", price)] = fmt.Sprintf("%2.f", taxIncludedPrice)
 	}
 
 	fmt.Println(result)
